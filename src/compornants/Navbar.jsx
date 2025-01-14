@@ -32,8 +32,8 @@ const Navbar = () => {
     userEmail: '',
     userPassword: '',
     conformUserPassword: '',
-    firstName: "",
-    lastName: "",
+    userFirstName: "",
+    userLastName: "",
     mobileNumber: "",
     userAddress: "",
     nic: ""
@@ -54,15 +54,15 @@ const Navbar = () => {
     }
 
     // First Name validation
-    if (!signUpData.firstName) {
-      tempErrors.firstName = "First name is required";
-    } else if (signUpData.firstName.length < 2) {
-      tempErrors.firstName = "First name must be at least 2 characters";
+    if (!signUpData.userFirstName) {
+      tempErrors.userFirstName = "First name is required";
+    } else if (signUpData.userFirstName.length < 2) {
+      tempErrors.userFirstName = "First name must be at least 2 characters";
     }
 
     // Last Name validation
-    if (!signUpData.lastName) {
-      tempErrors.lastName = "Last name is required";
+    if (!signUpData.userLastName) {
+      tempErrors.userLastName = "Last name is required";
     }
 
     // NIC validation
@@ -142,8 +142,8 @@ const Navbar = () => {
       userEmail: '',
       userPassword: '',
       conformUserPassword: '',
-      firstName: "",
-      lastName: "",
+      userFirstName: "",
+      userLastName: "",
       mobileNumber: "",
       userAddress: "",
       nic: ""
@@ -195,7 +195,14 @@ const Navbar = () => {
 
     if (validateSignUpForm()) {
       try {
-        const response = await axios.post("http://localhost:8083/user/signup", signUpData);
+        console.log(signUpData);
+
+        signUpData.role = [{ roleName: "User" }];
+        signUpData.conformUserPassword = undefined;
+        console.log(signUpData);
+
+        
+        const response = await axios.post("http://localhost:8083/user/register-new-user", signUpData);
         if (response.data) {
           handleSignupClose();
           // Show success message
@@ -245,7 +252,7 @@ const Navbar = () => {
               </Button>
             ) : null}
 
-            <Button color="inherit" onClick={() => { console.log(user.role[0].roleName) }} >
+            <Button color="inherit" component={RouterLink} to="/">
               Home
             </Button>
             <Button color="inherit" component={RouterLink} to="/cars">
@@ -369,7 +376,7 @@ const Navbar = () => {
             type="text"
             fullWidth
             variant="outlined"
-            value={signUpData.firstName}
+            value={signUpData.userFirstName}
             onChange={(e) => setSignUpData({ ...signUpData, userFirstName: e.target.value })}
             error={Boolean(errors.firstName)}
             helperText={errors.firstName}
@@ -381,7 +388,7 @@ const Navbar = () => {
             type="text"
             fullWidth
             variant="outlined"
-            value={signUpData.lastName}
+            value={signUpData.userLastName}
             onChange={(e) => setSignUpData({ ...signUpData, userLastName: e.target.value })}
             error={Boolean(errors.lastName)}
             helperText={errors.lastName}
@@ -408,7 +415,7 @@ const Navbar = () => {
             fullWidth
             variant="outlined"
             value={signUpData.mobileNumber}
-            onChange={(e) => setSignUpData({ ...signUpData, userFirstName: e.target.value })}
+            onChange={(e) => setSignUpData({ ...signUpData, mobileNumber: e.target.value })}
             error={Boolean(errors.mobileNumber)}
             helperText={errors.mobileNumber}
           />
@@ -430,7 +437,7 @@ const Navbar = () => {
             type="password"
             fullWidth
             variant="outlined"
-            value={loginData.userPassword}
+            value={signUpData.userPassword}
             onChange={(e) => setSignUpData({ ...signUpData, userPassword: e.target.value })}
             error={Boolean(errors.userPassword)}
             helperText={errors.userPassword}
