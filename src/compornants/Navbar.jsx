@@ -160,7 +160,7 @@ const Navbar = () => {
         .then(async (response) => {
           console.log(response.data.user);
           if (response.data.user != null) {
-            localStorage.setItem("token", response.data.token)
+            localStorage.setItem("jwtToken", response.data.jwtToken)
             localStorage.setItem("user", JSON.stringify(response.data.user))
 
 

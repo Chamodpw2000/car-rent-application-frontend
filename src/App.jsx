@@ -6,6 +6,7 @@ import Footer from './compornants/Footer';
 import Navbar from './compornants/Navbar';
 import Cars from './pages/cars/Cars';
 import About from './pages/aboutus/About';
+import CarForm from './pages/cars/AddCar';
 
 export const UserContext =createContext(null)
 
@@ -47,6 +48,8 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/cars" element={<Cars/>} />
         <Route path="/about" element={<About/>} />
+        <Route path="/addcar" element={<CarForm/>} />
+
 
       </Routes>
       

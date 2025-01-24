@@ -11,7 +11,8 @@ import {
     Button,
     Box,
     Rating,
-    Chip
+    Chip,
+    buttonBaseClasses
 } from '@mui/material';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import PeopleIcon from '@mui/icons-material/People';
@@ -302,6 +303,24 @@ const Cars = () => {
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 4 }}>
+
+
+            {user?.role[0].roleName === "Admin" ? (
+    <Button
+        variant="contained"
+        color="primary"
+        href="/addcar"
+        sx={{
+            width: "100%",    // Full width
+            height: "56px",   // Increase button height (adjust as needed)
+            fontSize: "16px", // Increase font size
+            fontWeight: "bold", // Make the text bold
+        }}
+    >
+        Add New Car
+    </Button>
+) : null}
+
                 <Tabs
                     value={selectedCategory}
                     onChange={handleCategoryChange}
