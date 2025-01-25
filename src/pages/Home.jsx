@@ -13,8 +13,11 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import SecurityIcon from '@mui/icons-material/Security';
 import SpeedIcon from '@mui/icons-material/Speed';
 import Navbar from '../compornants/Navbar';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+
+  const navigator = useNavigate();
   return (
     <Box>
 
@@ -40,7 +43,7 @@ const Home = () => {
               <Button
                 variant="contained"
                 size="large"
-                sx={{ backgroundColor: 'white', color: '#2196F3' }}
+                sx={{ backgroundColor: 'white', color: '#2196F3' }} onClick={()=>{navigator('/cars')}}
               >
                 Book Now
               </Button>

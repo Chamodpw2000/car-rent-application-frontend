@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { CircularProgress } from '@mui/material';
+
+
 import {
   Box,
   TextField,
@@ -8,10 +11,15 @@ import {
   Paper,
   Grid,
   IconButton,
+  MenuItem,
+  InputLabel,
+  Select,
+  FormControl,
 } from '@mui/material';
 import { CloudUpload, Delete } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -26,6 +34,11 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const CarForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+
+
+  const navigator = useNavigate();
   const [carData, setCarData] = useState({
     carName: '',
     carBrand: '',
@@ -36,8 +49,9 @@ const CarForm = () => {
     fualType: '',
     kmpl: '',
     images: [],
-    availableCount: '',
-    rent: ''
+    type: '',
+    rent: '',
+    capacity: ''
   });
 
   const [selectedImages, setSelectedImages] = useState([]);
@@ -262,13 +276,12 @@ const CarForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
+  
     try {
       const token = localStorage.getItem('jwtToken');
-
-      // Upload all images first
       const uploadedImages = await uploadImagesToCloudinary(carData.imagesToUpload);
-
+  
       const dataToSend = {
         carName: carData.carName,
         carBrand: carData.carBrand,
@@ -280,18 +293,18 @@ const CarForm = () => {
         kmpl: parseInt(carData.kmpl),
         images: uploadedImages,
         rent: parseInt(carData.rent),
-        type: carData.type
-      };
-      console.log(dataToSend);
-      
+        type: carData.type,
+        capacity: parseInt(carData.capacity)
 
+      };
+  
       const response = await axios.post('http://localhost:8083/addcar', dataToSend, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-
+  
       if (response.status === 200 || response.status === 201) {
         alert('Car details saved successfully!');
         setCarData({
@@ -304,13 +317,17 @@ const CarForm = () => {
           fualType: '',
           kmpl: '',
           image: '',
-          availableCount: '',
-          rent: ''
+          type: '',
+          rent: '',
+          capacity: ''
         });
         setSelectedImages([]);
+        navigator('/cars');
       }
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -407,15 +424,20 @@ const CarForm = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="availableCount"
-                name="availableCount"
-                type="number"
-                value={carData.availableCount}
-                onChange={handleChange}
-                required
-              />
+              <FormControl fullWidth required>
+                <InputLabel>Type</InputLabel>
+                <Select
+                  label="Type"
+                  name="type"
+                  value={carData.type}
+                  onChange={handleChange}
+                >
+                  <MenuItem value="SUV">SUV</MenuItem>
+                  <MenuItem value="SEDAN">SEDAN</MenuItem>
+                  <MenuItem value="LUXURY">LUXURY</MenuItem>
+                  <MenuItem value="SPORTS">SPORTS</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -424,6 +446,19 @@ const CarForm = () => {
                 name="rent"
                 type="number"
                 value={carData.rent}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Engine Capacity"
+                name="capacity"
+                type="number"
+                value={carData.capacity}
                 onChange={handleChange}
                 required
               />
@@ -487,16 +522,21 @@ const CarForm = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                size="large"
-                sx={{ mt: 2 }}
-              >
-                Save Car Details
-              </Button>
+            <Button
+  type="submit"
+  variant="contained"
+  color="primary"
+  fullWidth
+  size="large"
+  disabled={isLoading}
+  sx={{ mt: 2 }}
+>
+  {isLoading ? (
+    <CircularProgress size={24} color="inherit" />
+  ) : (
+    'Save Car Details'
+  )}
+</Button>
             </Grid>
           </Grid>
         </Box>

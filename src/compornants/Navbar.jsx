@@ -247,7 +247,7 @@ const Navbar = () => {
 
           <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
             {user?.role?.length > 0 && user.role[0].roleName === "Admin" ? (
-              <Button color="inherit" component={RouterLink} to="/contact">
+              <Button color="inherit" component={RouterLink} to="/admin">
                 Admin Dashboard
               </Button>
             ) : null}

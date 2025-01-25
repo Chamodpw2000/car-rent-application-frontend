@@ -1,0 +1,33 @@
+.custom-carousel .carousel .slide {
+    background: none;
+  }
+  
+  .custom-carousel .carousel .thumb {
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .custom-carousel .carousel .thumb.selected,
+  .custom-carousel .carousel .thumb:hover {
+    border-color: #3b82f6;
+  }
+  
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+  
+  .react-datepicker__input-container input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .react-datepicker__input-container input:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #3b82f6;
+  }
+  
