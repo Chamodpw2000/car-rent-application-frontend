@@ -34,6 +34,22 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const CarForm = () => {
+
+  const removeImage = (indexToRemove) => {
+    // Remove from preview images
+    setSelectedImages(prevImages =>
+      prevImages.filter((_, index) => index !== indexToRemove)
+    );
+
+    // Remove from files to upload
+    setCarData(prevState => ({
+      ...prevState,
+      imagesToUpload: prevState.imagesToUpload.filter((_, index) => index !== indexToRemove)
+    }));
+  };
+
+
+
   const [isLoading, setIsLoading] = useState(false);
 
 
@@ -277,11 +293,11 @@ const CarForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-  
+
     try {
       const token = localStorage.getItem('jwtToken');
       const uploadedImages = await uploadImagesToCloudinary(carData.imagesToUpload);
-  
+
       const dataToSend = {
         carName: carData.carName,
         carBrand: carData.carBrand,
@@ -297,14 +313,14 @@ const CarForm = () => {
         capacity: parseInt(carData.capacity)
 
       };
-  
+
       const response = await axios.post('http://localhost:8083/addcar', dataToSend, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-  
+
       if (response.status === 200 || response.status === 201) {
         alert('Car details saved successfully!');
         setCarData({
@@ -478,7 +494,7 @@ const CarForm = () => {
                 <VisuallyHiddenInput
                   type="file"
                   accept="image/*"
-                  multiple  // This enables multiple file selection
+                  multiple  
                   onChange={handleImageChange}
                 />
               </Button>
@@ -489,28 +505,50 @@ const CarForm = () => {
                     Preview:
                   </Typography>
                   <Grid container spacing={2} sx={{ mt: 2 }}>
+
+
+
+
+
                     {selectedImages.map((imageUrl, index) => (
                       <Grid item xs={4} key={index}>
-                        <img
-                          src={imageUrl}
-                          alt={`Car preview ${index + 1}`}
-                          style={{
-                            maxWidth: '100%',
-                            height: 'auto',
-                            maxHeight: '200px',
-                            objectFit: 'contain',
-                            borderRadius: '8px',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                          }}
-                        />
-                        <IconButton
-                          onClick={() => removeImage(index)}
-                          sx={{ position: 'absolute', top: 5, right: 5 }}
-                        >
-                          <Delete />
-                        </IconButton>
+                        <Box sx={{ position: 'relative' }}>
+                          <img
+                            src={imageUrl}
+                            alt={`Car preview ${index + 1}`}
+                            style={{
+                              maxWidth: '100%',
+                              height: 'auto',
+                              maxHeight: '200px',
+                              objectFit: 'contain',
+                              borderRadius: '8px',
+                              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                            }}
+                          />
+                          <IconButton
+                            onClick={() => removeImage(index)}
+                            sx={{
+                              position: 'absolute',
+                              top: 5,
+                              right: 5,
+                              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                              '&:hover': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)'
+                              }
+                            }}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </Box>
                       </Grid>
                     ))}
+
+
+
+
+
+
+
                   </Grid>
 
                 </Box>
@@ -522,21 +560,21 @@ const CarForm = () => {
             </Grid>
 
             <Grid item xs={12}>
-            <Button
-  type="submit"
-  variant="contained"
-  color="primary"
-  fullWidth
-  size="large"
-  disabled={isLoading}
-  sx={{ mt: 2 }}
->
-  {isLoading ? (
-    <CircularProgress size={24} color="inherit" />
-  ) : (
-    'Save Car Details'
-  )}
-</Button>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                size="large"
+                disabled={isLoading}
+                sx={{ mt: 2 }}
+              >
+                {isLoading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  'Save Car Details'
+                )}
+              </Button>
             </Grid>
           </Grid>
         </Box>
